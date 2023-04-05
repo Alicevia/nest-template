@@ -3,8 +3,10 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
+
   getHello(): string {
-    throw new Error('我自己扔的')
+    // CustomException.throwCustomException('自定义业务错误')
+    throw new Error('ok' )
     return '3'
   }
 }

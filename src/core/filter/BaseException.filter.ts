@@ -14,6 +14,8 @@ export class BaseException implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
+    console.log(exception.cause)
+
     response.send(normalizeError(exception.message,888))
   }
 }

@@ -1,4 +1,4 @@
-import { normalize404, normalizeError } from './../normalize/index';
+import { normalize404, normalizeData, normalizeError } from './../normalize/index';
 import {
   ArgumentsHost,
   Catch,
@@ -13,10 +13,12 @@ import {CustomException} from './index'
 export class HttpStatusExcept implements ExceptionFilter{
   catch(exception: HttpException, host: ArgumentsHost) {
     const res = host.switchToHttp().getResponse<Response>()
+    const exceptionResponse = exception.getResponse()
 
       if(exception instanceof CustomException){
-       return res.status(HttpStatus.OK).send(exception.getResponse())
+
+       return res.status(HttpStatus.OK).send(exceptionResponse)
       }
-      res.status(HttpStatus.OK).send(normalizeError('业务错误ook',667))
+      res.status(HttpStatus.OK).send(normalizeData(exception.message,exception.getStatus()))
   }
 }
