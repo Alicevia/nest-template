@@ -7,6 +7,7 @@ import {
   HttpException,
   HttpStatus,
 } from "@nestjs/common";
+import { HTTP_STATUS } from '../normalize';
 
 @Catch()
 export class BaseException implements ExceptionFilter {
@@ -14,8 +15,6 @@ export class BaseException implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
-    console.log(exception.cause)
-
-    response.send(normalizeError(exception.message,888))
+    response.send(normalizeError(exception.message,HTTP_STATUS.BUSINESS_ERROR))
   }
 }

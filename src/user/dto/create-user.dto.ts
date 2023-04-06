@@ -1,28 +1,35 @@
-import { IsNotEmpty, IsNumber } from "class-validator";
+import { IsNotEmpty, IsNumber,Length } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
+import {PickType} from '@nestjs/mapped-types'
 export class CreateUserDto {
+
   constructor(obj:CreateUserDto){
     Object.assign(this,obj)
   }
-  @ApiProperty({
-    description: '名称',
-    default: '用户1',
-  })
-  @IsNotEmpty({ message: '用户名不允许为空' })
+
+  @ApiProperty({    description: '名称',})
   username: string;
 
-  @ApiProperty()
-  @IsNotEmpty({ message: '密码不允许为空' })
+  @ApiProperty({
+    description:'手机号码'
+  })
+  @IsNotEmpty({ message: '手机号不能为空' })
+  mobile: string;
+
+  @ApiProperty({description:'密码'})
+  @IsNotEmpty({ message: '密码不能为空' })
+  @Length(10, 20, { message: '密码的长度不能小于10不能大于20' })
   password: string;
 
   @ApiProperty()
-  @IsNotEmpty({message:'邮箱不能为空'})
   email:string
 
   @ApiProperty()
-  @IsNotEmpty({ message: '状态必填' })
   @IsNumber()
   state: number;
 
 
 }
+
+export class LoginInfoDto extends PickType(CreateUserDto,['mobile','password']){}
+

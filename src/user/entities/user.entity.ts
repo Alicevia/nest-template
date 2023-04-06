@@ -7,16 +7,21 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({unique:true})
+  mobile: string;
+
   @Column()
+  @Column({nullable:true})
   username: string;
 
   @Column()
   password: string;
 
-  @Column()
+
+  @Column({nullable:true})
   email:string
 
-  @Column()
+  @Column({nullable:true})
   state:number
 
   @OneToMany(()=>Tag,t=>t.createBy)
