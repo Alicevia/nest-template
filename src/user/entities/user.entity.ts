@@ -10,7 +10,6 @@ export class User {
   @Column({unique:true})
   mobile: string;
 
-  @Column()
   @Column({nullable:true})
   username: string;
 
@@ -29,6 +28,4 @@ export class User {
 
   @OneToMany(()=>Article,a=>a.createBy)
   articles:Article[]
-
-
 }

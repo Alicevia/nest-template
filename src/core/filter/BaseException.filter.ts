@@ -1,5 +1,6 @@
 import { normalizeError } from './../normalize/returnValue';
-import { nowDate } from '../utils/index';
+import {CustomException} from './index'
+
 import {
   ArgumentsHost,
   Catch,
@@ -15,6 +16,11 @@ export class BaseException implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
+    if(exception instanceof CustomException){
+
+      return response.send(exception.getResponse())
+     }
     response.send(normalizeError(exception.message,HTTP_STATUS.BUSINESS_ERROR))
+
   }
 }
