@@ -6,15 +6,16 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { NormalizeData } from '../normalize/NormalizeData';
+import { NormalizeResponse } from '../normalize/NormalizeResponse';
 
 interface Response<T>{
-  data:T
+  data?:T
 }
+
 
 export class TransformResponseInterceptor<T> implements NestInterceptor<T,Response<T>>{
   intercept(context: ExecutionContext, next: CallHandler<T>): Observable<Response<T>> | Promise<Observable<Response<T>>> {
-    return next.handle().pipe(map(data=>NormalizeData.success('操作成功',data)))
+    return next.handle().pipe(map(data=>NormalizeResponse.success<T>(data)))
   }
 }
 

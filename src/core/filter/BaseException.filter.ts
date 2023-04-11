@@ -1,26 +1,23 @@
-import { normalizeError } from './../normalize/returnValue';
-import {CustomException} from './index'
+
 
 import {
   ArgumentsHost,
   Catch,
   ExceptionFilter,
   HttpException,
-  HttpStatus,
 } from "@nestjs/common";
-import { HTTP_STATUS } from '../normalize';
+import {HTTP_STATUS, NormalizeResponse  } from '../normalize';
+import { Request, Response } from 'express';
 
 @Catch()
 export class BaseException implements ExceptionFilter {
   // constructor(private readonly logger: Logger) {}
-  catch(exception: HttpException, host: ArgumentsHost) {
+  catch(exception: Error, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
-    const response = ctx.getResponse();
-    if(exception instanceof CustomException){
-
-      return response.send(exception.getResponse())
-     }
-    response.send(normalizeError(exception.message,HTTP_STATUS.BUSINESS_ERROR))
-
+    const response = ctx.getResponse<Response>();
+    const request= ctx.getRequest<Request>()
+    response.send(
+      NormalizeResponse.fail(new HttpException(exception,HTTP_STATUS.SERVICE_UNAVAILABLE),request)
+    )
   }
 }

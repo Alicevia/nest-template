@@ -8,7 +8,7 @@ import { UserModule } from './user/user.module'
 import { ArticleModule } from './article/article.module'
 import { TagModule } from './tag/tag.module'
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
-import { BaseException ,} from "./core/filter";
+import { BaseException, HttpStatusExcept} from "./core/filter";
 import { APP_CONF } from './config/configuration';
 
 
@@ -51,6 +51,10 @@ import { APP_CONF } from './config/configuration';
     {
       provide:APP_FILTER,
       useClass:BaseException
+    },
+    {
+      provide:APP_FILTER,
+      useClass:HttpStatusExcept
     },
 
  ],

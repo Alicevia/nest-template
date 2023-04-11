@@ -1,9 +1,10 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateUserDto, RegisterInfoDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import {Repository} from 'typeorm'
+import { BusinessException } from 'src/core/normalize';
 
 @Injectable()
 export class UserService {
@@ -15,7 +16,7 @@ export class UserService {
   async create(registerInfo: RegisterInfoDto) {
     const {mobile}=registerInfo
     let info= await this.userRepository.findOne({where:{mobile}})
-    if(info) throw new Error('用户已注册')
+    if(info) BusinessException.throwException('用户已注册')
     return this.userRepository.save(registerInfo);
   }
 
