@@ -24,5 +24,6 @@ async function bootstrap() {
   SwaggerModule.setup("docs", app, SwaggerModule.createDocument(app, config));
   // app.setGlobalPrefix('xx')
   await app.listen(globalConf.get('port'));
+  console.log('启动ok','https://app.apifox.com/project/2463254')
 }
 bootstrap();

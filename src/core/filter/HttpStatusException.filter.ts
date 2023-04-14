@@ -13,7 +13,6 @@ export class HttpStatusExcept implements ExceptionFilter{
     const ctx = host.switchToHttp()
     const response = ctx.getResponse<Response>()
     const request = ctx.getRequest<Request>()
-
     response.send(NormalizeResponse.fail(exception,request))
   }
 }

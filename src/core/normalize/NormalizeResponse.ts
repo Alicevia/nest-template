@@ -22,7 +22,7 @@ export class NormalizeResponse<T> {
   static fail(exception: HttpException, request: Request) {
     let data = new NormalizeResponse()
     data.message = exception.message
-    data.data = exception.getResponse()
+    data.data =exception.cause?.cause ?? exception.getResponse()
     data.code = exception.getStatus()
 
     const {url,method}=request

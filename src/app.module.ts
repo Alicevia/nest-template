@@ -5,11 +5,15 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { UserModule } from './user/user.module'
-import { ArticleModule } from './article/article.module'
 import { TagModule } from './tag/tag.module'
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { BaseException, HttpStatusExcept} from "./core/filter";
 import { APP_CONF } from './config/configuration';
+import { FriendModule } from './friend/friend.module';
+import { GroupModule } from './group/group.module';
+import { FriendMessageModule } from './friend-message/friend-message.module';
+import { GroupMessageModule } from './group-message/group-message.module';
+import { WsModule } from './ws/ws.module';
 
 
 @Module({
@@ -31,15 +35,19 @@ import { APP_CONF } from './config/configuration';
           password: db.password,
           autoLoadEntities: true,
           synchronize: true,
-          entities: ['/src/**/*.entity{.ts,.js}'],
+          entities: ['src/**/*.entity{.ts,.js}'],
         }
        },
        inject:[ConfigService]
     }),
 
     UserModule,
-    ArticleModule,
     TagModule,
+    FriendModule,
+    GroupModule,
+    FriendMessageModule,
+    GroupMessageModule,
+    WsModule,
   ],
   controllers: [AppController],
   providers: [
