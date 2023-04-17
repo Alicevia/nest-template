@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import {  RegisterInfoDto } from './dto/create-user.dto';
@@ -16,12 +17,13 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  create(@Body() userInfo: RegisterInfoDto) {
-    return this.userService.create(userInfo);
+  create(@Body() userInfo: RegisterInfoDto):boolean {
+     this.userService.create(userInfo);
+     return true
   }
 
   @Get()
-  findAll() {
+  findAll(id:string) {
     return this.userService.findAll();
   }
 

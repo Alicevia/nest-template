@@ -19,7 +19,9 @@ export class User {
   @Column({nullable:true})
   username: string;
 
-  @Column()
+  @Column({
+    comment:'密码'
+  })
   password: string;
 
   @CreateDateColumn()
@@ -37,7 +39,7 @@ export class User {
   @ManyToMany(() => Group,(g)=>g.users,)
   @JoinTable({
     joinColumn:{
-      name:'userId',
+      name:'createBy',
       referencedColumnName:'userId'
     },
     inverseJoinColumn:{

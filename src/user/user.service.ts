@@ -5,6 +5,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import {Repository} from 'typeorm'
 import { BusinessException } from 'src/core/normalize';
+import { plainToInstance ,instanceToPlain} from 'class-transformer';
 
 @Injectable()
 export class UserService {
@@ -13,7 +14,7 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async create(registerInfo: RegisterInfoDto) {
+  async create(registerInfo: RegisterInfoDto):Promise<CreateUserDto> {
     const {mobile}=registerInfo
     let info= await this.userRepository.findOne({where:{mobile}})
     if(info) BusinessException.throwException('用户已注册')
