@@ -1,9 +1,9 @@
+import { CommonEntity } from 'src/core/normalize';
 import { Group } from 'src/group/entities/group.entity';
-import { Tag } from 'src/tag/entities/tag.entity';
 import { Entity,ManyToMany,JoinTable, PrimaryGeneratedColumn, Column ,CreateDateColumn, OneToMany, PrimaryColumn, } from "typeorm";
 
 @Entity()
-export class User {
+export class User extends CommonEntity {
 
   @PrimaryGeneratedColumn('uuid')
   userId: string;
@@ -20,21 +20,17 @@ export class User {
   username: string;
 
   @Column({
-    comment:'密码'
+    comment:'密码',
+    select:false
   })
   password: string;
 
-  @CreateDateColumn()
-  createTime:Date
 
   @Column({nullable:true})
   email:string
 
-  @Column({nullable:true})
-  state:number
 
-  @OneToMany(()=>Tag,t=>t.createBy)
-  tags:Tag[]
+
 
   @ManyToMany(() => Group,(g)=>g.users,)
   @JoinTable({

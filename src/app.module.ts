@@ -5,8 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { UserModule } from './user/user.module'
-import { TagModule } from './tag/tag.module'
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { BaseException, HttpStatusExcept} from "./core/filter";
 import { APP_CONF } from './config/configuration';
 import { FriendModule } from './friend/friend.module';
@@ -14,6 +13,8 @@ import { GroupModule } from './group/group.module';
 import { FriendMessageModule } from './friend-message/friend-message.module';
 import { GroupMessageModule } from './group-message/group-message.module';
 import { WsModule } from './ws/ws.module';
+import { AuthModule } from './auth/auth.module';
+import { JwtAuthGuard } from './auth/guard/jwt-auth.guard';
 
 
 @Module({
@@ -42,16 +43,20 @@ import { WsModule } from './ws/ws.module';
     }),
 
     UserModule,
-    TagModule,
     FriendModule,
     GroupModule,
     FriendMessageModule,
     GroupMessageModule,
     WsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
     {
       provide: APP_INTERCEPTOR,
       useClass: TransformResponseInterceptor,

@@ -1,19 +1,21 @@
 import { ArgumentMetadata, Injectable, PipeTransform } from "@nestjs/common";
-import {plainToInstance, plainToClassFromExist,} from 'class-transformer'
+import {plainToInstance, } from 'class-transformer'
 import {validate} from 'class-validator'
 import { ValidateException } from "../normalize";
 
 @Injectable()
 export class ValidationPipe implements PipeTransform{
  async transform(value: any, {type,data,metatype}: ArgumentMetadata) {
-  console.log(type,data,metatype)
 
     if(!metatype|| !this.toValidate(metatype)) return value
-    const obj = plainToInstance(metatype,value,{excludeExtraneousValues:true})
+    const obj = plainToInstance(metatype,value,{excludeExtraneousValues:true,exposeDefaultValues:true})
     const errors = await validate(obj)
+    console.log(value,'----',obj)
+
     if(errors.length>0){
+      console.log(errors)
       const tip = errors.reduce((pre,item)=>{
-          pre[item.property]=item.constraints
+          pre[item.property]=Object.values(item.constraints)
           return pre
       },{})
      ValidateException.throwException(tip)

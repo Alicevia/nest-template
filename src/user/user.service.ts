@@ -1,11 +1,11 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { HttpException, Injectable } from '@nestjs/common';
-import { CreateUserDto, RegisterInfoDto } from './dto/create-user.dto';
+import { HttpException, Injectable, Query } from '@nestjs/common';
+import {  RegisterUserDto, UserDto, LoginDto, UserDtoPartical } from './dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import {Repository} from 'typeorm'
-import { BusinessException } from 'src/core/normalize';
-import { plainToInstance ,instanceToPlain} from 'class-transformer';
+import { BusinessException, PaginationResult } from 'src/core/normalize';
+import { FindUserDto } from './dto/find-user.dto';
 
 @Injectable()
 export class UserService {
@@ -14,27 +14,49 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async create(registerInfo: RegisterInfoDto):Promise<CreateUserDto> {
+  async create(registerInfo: RegisterUserDto){
     const {mobile}=registerInfo
-    let info= await this.userRepository.findOne({where:{mobile}})
-    if(info) BusinessException.throwException('用户已注册')
-    return this.userRepository.save(registerInfo);
+    let info= await this.userRepository.findOne({where:{mobile,isDelete:false}})
+    if(info) BusinessException.throwException('该手机号已被注册')
+    return this.userRepository.save(registerInfo).then(()=>true);
+
   }
 
-  findAll() {
-    return `This action returns all user`;
+ async findAll( query:FindUserDto) {
+    const {page,pageSize,username}=query
+    let [list,total] =await this.userRepository.findAndCount({
+      where:{
+        username:username
+      },
+      skip:pageSize*(page-1),
+      take:pageSize,
+    })
+    return PaginationResult.init({total,page,pageSize,list})
   }
 
-  findOne(id: number) {
-    return '';
+  async findOneByUserId(userId:string) {
+    const user = this.findOne({userId})
+    if(!user) BusinessException.throwException('无此用户')
+    return user
+  }
+
+  findOne (userDto:UserDtoPartical){
+    return this.userRepository.findOneBy(userDto);
+  }
+
+  async loginByUserInfo(userInfo:LoginDto){
+    const user = await this.userRepository.findOneBy(userInfo)
+    if(!user) BusinessException.throwException('用户名或密码错误')
+    return user
   }
 
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(userId: string, updateUserDto: UpdateUserDto) {
+    await this.findOneByUserId(userId)
+    return this.userRepository.update({userId},updateUserDto).then(()=>true)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  remove(userId:string) {
+    return this.userRepository.softDelete({userId}).then(()=>true)
   }
 }

@@ -9,5 +9,6 @@ import { Group } from "src/group/entities/group.entity";
   imports: [TypeOrmModule.forFeature([User,Group])],
   controllers: [UserController],
   providers: [UserService],
+  exports:[UserService]
 })
 export class UserModule {}

@@ -1,6 +1,7 @@
 import { HttpException } from "@nestjs/common"
 import { nowDate } from "../utils"
 import { Request } from "express"
+import { PaginationDto } from "./common-dto"
 export class NormalizeResponse<T> {
   message: string='操作成功'
   code: number = 0
@@ -32,4 +33,17 @@ export class NormalizeResponse<T> {
     return data
   }
 
+}
+
+export class PaginationResult<T> extends PaginationDto{
+  total:number
+  list: T[]
+  constructor({total,list,page,pageSize}){
+    super({page,pageSize})
+    this.total=total
+    this.list=list
+  }
+  static init<T>(obj:PaginationResult<T>){
+   return new PaginationResult(obj)
+  }
 }
