@@ -7,9 +7,11 @@ import { BusinessException } from 'src/core/normalize';
 @Injectable()
 export class AuthService {
   constructor(private readonly userService:UserService){}
-  async validateUser(userInfo:LoginDto){
-    const user =await this.userService.findOne(userInfo)
-    if(user) return user
-    BusinessException.throwException('用户名或密码错误')
+  async validateUser(loginInfo:LoginDto){
+    const user =await this.userService.findOneByLoginInfo(loginInfo)
+    // const match = await bcrypt.compare(loginInfo.password,user.password)
+    const match = user.password==loginInfo.password
+    if(!match) BusinessException.throwException('用户名或密码错误')
+    return user
   }
 }

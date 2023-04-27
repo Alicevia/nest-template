@@ -16,13 +16,13 @@ export class UserService {
 
   async create(registerInfo: RegisterUserDto){
     const {mobile}=registerInfo
-    let info= await this.userRepository.findOne({where:{mobile,isDelete:false}})
+    let info= await this.findOne({mobile})
     if(info) BusinessException.throwException('该手机号已被注册')
     return this.userRepository.save(registerInfo).then(()=>true);
 
   }
 
- async findAll( query:FindUserDto) {
+  async findAll( query:FindUserDto) {
     const {page,pageSize,username}=query
     let [list,total] =await this.userRepository.findAndCount({
       where:{
@@ -41,11 +41,12 @@ export class UserService {
   }
 
   findOne (userDto:UserDtoPartical){
-    return this.userRepository.findOneBy(userDto);
+    return this.userRepository.findOneBy({...userDto,isDelete:false});
   }
 
-  async loginByUserInfo(userInfo:LoginDto){
-    const user = await this.userRepository.findOneBy(userInfo)
+  async findOneByLoginInfo(loginInfo:LoginDto){
+    console.log('xx',loginInfo,)
+    const user = await this.findOne(loginInfo)
     if(!user) BusinessException.throwException('用户名或密码错误')
     return user
   }
