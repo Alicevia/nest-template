@@ -8,6 +8,12 @@ export  const APP_CONF= () => ({
     username: process.env.DATABASE_NAME,
     password: process.env.DATABASE_PWD,
     database: process.env.DATABASE_LIB,
+  },
+  redis:{
+    host: process.env.REDIS_HOST, // 这部分会和从env中进行合并
+    port: process.env.REDIS_PORT,
+    password: process.env.REDIS_PWD,
+    db:process.env.REDIS_DB
   }
 });
 

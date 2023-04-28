@@ -1,6 +1,5 @@
-import { Controller, Req,Post, UseGuards, Request, Body, Bind } from '@nestjs/common';
+import { Controller, Req,Post, UseGuards, Request, Body, Bind, Get } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LocalAuthGuard } from './guard/local-auth.guard';
 import { Public } from 'src/core/normalize';
 import { LoginDto } from 'src/user/dto';
 
@@ -8,10 +7,15 @@ import { LoginDto } from 'src/user/dto';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
-  @UseGuards(LocalAuthGuard)
+
   @Post('login')
   @Public()
-  login(@Request() req){
-   return  req.user
+  login(@Body() loginInfo:LoginDto){
+   return this.authService.userLogin(loginInfo)
+  }
+
+  @Get('userInfo')
+  userInfo(@Request() req){
+    return req.user
   }
 }

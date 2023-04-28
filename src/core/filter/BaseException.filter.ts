@@ -16,7 +16,6 @@ export class BaseException implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request= ctx.getRequest<Request>()
-    console.log(exception)
 
     response.send(
       NormalizeResponse.fail(new HttpException('网络开小差了，请稍后重试',HTTP_STATUS.SERVICE_UNAVAILABLE,{cause:exception}),request)

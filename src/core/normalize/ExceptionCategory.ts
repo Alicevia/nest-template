@@ -1,4 +1,4 @@
-import { HttpException } from '@nestjs/common';
+import { HttpException, UnauthorizedException ,} from '@nestjs/common';
 import { HTTP_STATUS } from './HTTP_STATUS';
 
 
@@ -17,5 +17,10 @@ export class ValidateException extends HttpException{
     }
     throw new ValidateException(msg,code,error)
   }
+}
+
+export const throwAuthException = (...arg:ConstructorParameters<typeof UnauthorizedException>)=>{
+  const [message='身份验证失败',descriptionOrOptions]=arg
+  throw new UnauthorizedException(message,descriptionOrOptions)
 }
 

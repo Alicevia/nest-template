@@ -10,7 +10,6 @@ export class LocalStrategy extends PassportStrategy(Strategy){
     super()
   }
    validate(username:LoginDto['username'],password:LoginDto['password']){
-    console.log(password,'32')
-    return this.authService.validateUser({username,password})
+    return this.authService.userLogin({username,password})
   }
 }

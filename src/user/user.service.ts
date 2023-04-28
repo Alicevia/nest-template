@@ -3,7 +3,7 @@ import { HttpException, Injectable, Query } from '@nestjs/common';
 import {  RegisterUserDto, UserDto, LoginDto, UserDtoPartical } from './dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import {Repository} from 'typeorm'
+import {FindOneOptions, FindOptionsSelect, Repository} from 'typeorm'
 import { BusinessException, PaginationResult } from 'src/core/normalize';
 import { FindUserDto } from './dto/find-user.dto';
 
@@ -40,16 +40,23 @@ export class UserService {
     return user
   }
 
-  findOne (userDto:UserDtoPartical){
-    return this.userRepository.findOneBy({...userDto,isDelete:false});
+  private findOne (userDto:UserDtoPartical,options?:FindOneOptions<User>){
+    const where = {...userDto,isDelete:false}
+    if(!options){
+      options = {where}
+    }else{
+      options.where=where
+    }
+    return this.userRepository.findOne(options);
   }
 
-  async findOneByLoginInfo(loginInfo:LoginDto){
-    console.log('xx',loginInfo,)
-    const user = await this.findOne(loginInfo)
-    if(!user) BusinessException.throwException('用户名或密码错误')
+  async findOneByLoginInfo(userDto:UserDtoPartical){
+    const user = await this.findOne(userDto,{select:Object.keys(new UserDto) as FindOptionsSelect<User>})
+    if(!user)  BusinessException.throwException('用户名或者密码错误')
     return user
   }
+
+
 
 
   async update(userId: string, updateUserDto: UpdateUserDto) {

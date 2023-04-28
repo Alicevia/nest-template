@@ -1,6 +1,6 @@
 import { ConfigModule ,ConfigService} from '@nestjs/config';
 import { TransformResponseInterceptor } from './core/interceptors/TransformResponse.interceptor';
-import { Module, } from '@nestjs/common'
+import { CacheModule, Module, } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
@@ -15,10 +15,25 @@ import { GroupMessageModule } from './group-message/group-message.module';
 import { WsModule } from './ws/ws.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guard/jwt-auth.guard';
-
+import { redisStore} from 'cache-manager-redis-yet';
 
 @Module({
   imports: [
+    CacheModule.registerAsync({
+      isGlobal: true,
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => {
+        const redis = configService.get('redis')
+        return {
+          store: redisStore,
+          host: redis.host,
+          port: redis.port,
+          db:redis.db,
+          ttl:60*60*2* 1000
+        };
+      },
+    }),
+
     ConfigModule.forRoot({
       isGlobal: true,
       cache:true,

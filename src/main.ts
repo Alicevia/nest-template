@@ -3,7 +3,7 @@ import { NestFactory } from "@nestjs/core";
 import { join } from "path";
 import { AppModule } from "./app.module";
 import { NestExpressApplication } from "@nestjs/platform-express";
-import session from "express-session";
+
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { VersioningType } from '@nestjs/common';
 import { ValidationPipe } from './core/pipe/ValidationPipe.pipe';

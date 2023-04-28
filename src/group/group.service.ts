@@ -6,17 +6,6 @@ import { Group } from './entities/group.entity';
 import { Repository } from 'typeorm';
 
 
-function Format (c){
-
-  console.log(new c(),'传入的类')
-  return (...arg)=>{
-    let obj  = new c()
-    let res ={}
-    console.log(...arg)
-    return
-  }
-}
-
 @Injectable()
 export class GroupService {
   constructor(
