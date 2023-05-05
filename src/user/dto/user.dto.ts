@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsOptional,Length ,IsEmail,MaxLength, IsString, IsEmpty} from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
-import { Exclude, Expose, Transform } from "class-transformer";
+import { Exclude, Expose, Transform,instanceToPlain,plainToInstance } from "class-transformer";
 import { PickType,PartialType } from "@nestjs/mapped-types";
 
 
@@ -37,7 +37,7 @@ export class UserDto {
   @IsNotEmpty({ message: '密码不能为空' })
   @Length(8, 16, { message: '密码长度8-16个字符' })
   @IsString()
-  @Expose()
+  @Expose({toPlainOnly:false})
   password: string;
 }
 
@@ -45,3 +45,9 @@ export class UserDto {
 export class LoginDto extends PickType(UserDto,['username','password']){}
 
 export class UserDtoPartical extends PartialType(UserDto){}
+
+export const  UserDtoKeys=(ins:UserDto)=>{
+  let plainObj = instanceToPlain(ins,{excludeExtraneousValues:true,exposeDefaultValues:true})
+
+  return Object.keys(plainObj)
+}

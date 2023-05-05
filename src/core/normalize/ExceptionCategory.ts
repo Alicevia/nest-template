@@ -20,7 +20,7 @@ export class ValidateException extends HttpException{
 }
 
 export const throwAuthException = (...arg:ConstructorParameters<typeof UnauthorizedException>)=>{
-  const [message='身份验证失败',descriptionOrOptions]=arg
+  const [message='身份已过期',descriptionOrOptions]=arg
   throw new UnauthorizedException(message,descriptionOrOptions)
 }
 

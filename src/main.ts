@@ -8,7 +8,9 @@ import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { VersioningType } from '@nestjs/common';
 import { ValidationPipe } from './core/pipe/ValidationPipe.pipe';
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule,{
+    logger:false
+  });
   const globalConf =app.get(ConfigService)
   app.useStaticAssets(join(__dirname, "../public"));
   app.useGlobalPipes(new ValidationPipe())

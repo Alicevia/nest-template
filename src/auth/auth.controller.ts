@@ -16,6 +16,6 @@ export class AuthController {
 
   @Get('userInfo')
   userInfo(@Request() req){
-    return req.user
+    return this.authService.userInfo(req.user)
   }
 }

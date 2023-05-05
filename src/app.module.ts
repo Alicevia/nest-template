@@ -1,13 +1,13 @@
-import { ConfigModule ,ConfigService} from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TransformResponseInterceptor } from './core/interceptors/TransformResponse.interceptor';
-import { CacheModule, Module, } from '@nestjs/common'
+import { CacheModule, MiddlewareConsumer, Module, NestModule, RequestMethod, } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { UserModule } from './user/user.module'
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
-import { BaseException, HttpStatusExcept} from "./core/filter";
-import { APP_CONF } from './config/configuration';
+import { BaseException, HttpStatusExcept } from "./core/filter";
+import { APP_CONF } from './core/config';
 import { FriendModule } from './friend/friend.module';
 import { GroupModule } from './group/group.module';
 import { FriendMessageModule } from './friend-message/friend-message.module';
@@ -15,7 +15,9 @@ import { GroupMessageModule } from './group-message/group-message.module';
 import { WsModule } from './ws/ws.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guard/jwt-auth.guard';
-import { redisStore} from 'cache-manager-redis-yet';
+import { redisStore } from 'cache-manager-redis-yet';
+import { LoggerModule } from './logger/logger.module';
+import { LoggerMiddleware } from './core/middleware/Logger.middleware';
 
 @Module({
   imports: [
@@ -28,33 +30,33 @@ import { redisStore} from 'cache-manager-redis-yet';
           store: redisStore,
           host: redis.host,
           port: redis.port,
-          db:redis.db,
-          ttl:60*60*2* 1000
+          db: redis.db,
+          ttl: 60 * 60 * 2 * 1000
         };
       },
     }),
 
     ConfigModule.forRoot({
       isGlobal: true,
-      cache:true,
-      load:[APP_CONF]
+      cache: true,
+      load: [APP_CONF]
     }),
     TypeOrmModule.forRootAsync({
-       useFactory:async(configService:ConfigService) =>{
+      useFactory: async (configService: ConfigService) => {
         const db = configService.get('database')
-        return  {
+        return {
           type: 'mysql',
-          host:  db.host,
+          host: db.host,
           port: db.prot,
-          database:  db.database,
+          database: db.database,
           username: db.username,
           password: db.password,
           autoLoadEntities: true,
           synchronize: true,
           entities: ['src/**/*.entity{.ts,.js}'],
         }
-       },
-       inject:[ConfigService]
+      },
+      inject: [ConfigService]
     }),
 
     UserModule,
@@ -64,6 +66,7 @@ import { redisStore} from 'cache-manager-redis-yet';
     GroupMessageModule,
     WsModule,
     AuthModule,
+    LoggerModule,
   ],
   controllers: [AppController],
   providers: [
@@ -77,14 +80,18 @@ import { redisStore} from 'cache-manager-redis-yet';
       useClass: TransformResponseInterceptor,
     },
     {
-      provide:APP_FILTER,
-      useClass:BaseException
+      provide: APP_FILTER,
+      useClass: BaseException
     },
     {
-      provide:APP_FILTER,
-      useClass:HttpStatusExcept
+      provide: APP_FILTER,
+      useClass: HttpStatusExcept
     },
 
- ],
+  ],
 })
-export class AppModule {}
+export class AppModule implements NestModule{
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL })
+  }
+ }

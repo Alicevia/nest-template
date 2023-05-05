@@ -10,10 +10,10 @@ export class ValidationPipe implements PipeTransform{
     if(!metatype|| !this.toValidate(metatype)) return value
     const obj = plainToInstance(metatype,value,{excludeExtraneousValues:true,exposeDefaultValues:true})
     const errors = await validate(obj)
-    console.log(value,'----',obj)
+
 
     if(errors.length>0){
-      console.log(errors)
+
       const tip = errors.reduce((pre,item)=>{
           pre[item.property]=Object.values(item.constraints)
           return pre

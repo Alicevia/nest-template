@@ -17,3 +17,4 @@ export  const APP_CONF= () => ({
   }
 });
 
+export const TOKEN_KEY = 'tokenlist'
