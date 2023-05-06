@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Group } from './entities/group.entity';
 import { Repository } from 'typeorm';
+import { CreateGroupDto } from './dto/create-group.dto';
 
 
 @Injectable()
@@ -13,8 +13,8 @@ export class GroupService {
     private readonly groupRepository: Repository<Group>,
   ) {}
 
-  create(createGroupDto: CreateGroupDto) {
-    return this.groupRepository.save(createGroupDto)
+  create(group:CreateGroupDto) {
+    return this.groupRepository.save(group)
   }
 
   findAll() {

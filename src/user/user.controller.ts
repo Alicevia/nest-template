@@ -12,12 +12,14 @@ import { UserService } from './user.service';
 import {  RegisterUserDto } from './dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FindUserDto } from './dto/find-user.dto';
+import { Public } from 'src/core/normalize';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
+  @Public()
   create(@Body() userInfo: RegisterUserDto):boolean {
      this.userService.create(userInfo);
      return true

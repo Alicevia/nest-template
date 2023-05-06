@@ -3,6 +3,9 @@ import { Column, CreateDateColumn, Entity, ManyToMany, PrimaryGeneratedColumn } 
 
 @Entity()
 export class Group {
+  constructor(group){
+    Object.assign(this,group)
+  }
   @PrimaryGeneratedColumn('uuid')
   groupId:string
 

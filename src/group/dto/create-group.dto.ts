@@ -22,5 +22,7 @@ export class GroupDto  {
   @Length(0,10,{message:'提示文字大于10'})
   notice: string;
 }
-export class CreateGroupDto extends PickType(GroupDto,['createBy','name']) {}
+export class CreateGroupDto extends PickType(GroupDto,['name']) {}
+
+
 

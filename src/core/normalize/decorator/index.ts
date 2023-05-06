@@ -1,1 +1,1 @@
-export * from './noAuth'
+export * from './skipJWT'

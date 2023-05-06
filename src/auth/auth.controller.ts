@@ -1,7 +1,8 @@
-import { Controller, Req,Post, UseGuards, Request, Body, Bind, Get } from '@nestjs/common';
+import { Controller, Req,Post, UseGuards, Request, Body,  Get, Query } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from 'src/core/normalize';
-import { LoginDto } from 'src/user/dto';
+import { LoginDto, UserDtoPartical } from 'src/user/dto';
+import { User } from 'src/core/normalize/decorator/user';
 
 
 @Controller('auth')
@@ -15,7 +16,7 @@ export class AuthController {
   }
 
   @Get('userInfo')
-  userInfo(@Request() req){
-    return this.authService.userInfo(req.user)
+  userInfo(@User() user:UserDtoPartical,){
+    return this.authService.userInfo(user)
   }
 }

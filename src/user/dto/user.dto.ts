@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsOptional,Length ,IsEmail,MaxLength, IsString, IsEmpty} from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
-import { Exclude, Expose, Transform,instanceToPlain,plainToInstance } from "class-transformer";
+import { Expose, Transform,instanceToPlain,plainToInstance } from "class-transformer";
 import { PickType,PartialType } from "@nestjs/mapped-types";
 
 
@@ -46,8 +46,8 @@ export class LoginDto extends PickType(UserDto,['username','password']){}
 
 export class UserDtoPartical extends PartialType(UserDto){}
 
+
 export const  UserDtoKeys=(ins:UserDto)=>{
   let plainObj = instanceToPlain(ins,{excludeExtraneousValues:true,exposeDefaultValues:true})
-
   return Object.keys(plainObj)
 }
