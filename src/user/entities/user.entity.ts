@@ -1,6 +1,6 @@
 import { CommonEntity } from 'src/core/normalize';
 import { Group } from 'src/group/entities/group.entity';
-import { Entity,ManyToMany,JoinTable, PrimaryGeneratedColumn, Column ,CreateDateColumn, OneToMany, PrimaryColumn, } from "typeorm";
+import { Entity,ManyToMany,JoinTable, PrimaryGeneratedColumn, Column ,Generated } from "typeorm";
 
 @Entity()
 export class User extends CommonEntity {

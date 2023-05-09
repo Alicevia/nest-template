@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UpdateGroupDto } from './dto/update-group.dto';
+import { UpdateGroupDto } from './dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Group } from './entities/group.entity';
 import { Repository } from 'typeorm';
@@ -17,19 +17,20 @@ export class GroupService {
     return this.groupRepository.save(group)
   }
 
-  findAll() {
-    return `This action returns all group`;
+  findAll(createBy:string) {
+    return this.groupRepository.findBy({createBy});
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} group`;
+  findOne(groupId:string) {
+    return this.groupRepository.findOneBy({groupId});
   }
 
-  update(id: number, updateGroupDto: UpdateGroupDto) {
-    return `This action updates a #${id} group`;
+  update(groupId: string, updateGroupDto: UpdateGroupDto) {
+    return this.groupRepository.update({groupId},updateGroupDto)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} group`;
+  remove(groupId) {
+
+    return this.groupRepository.delete({groupId}).then(()=>true)
   }
 }

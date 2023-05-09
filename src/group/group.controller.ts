@@ -3,34 +3,35 @@ import { GroupService } from './group.service';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
 import { User } from 'src/core/normalize/decorator/user';
-import { UserDtoPartical } from 'src/user/dto';
+
 
 @Controller('group')
 export class GroupController {
   constructor(private readonly groupService: GroupService) {}
 
   @Post()
-  create(@Body() createGroupDto: CreateGroupDto,@User('userId') userId:string) {
-    return this.groupService.create(createGroupDto);
+  create(@Body() createGroupDto:Pick<CreateGroupDto,'name'>,@User('userId') createBy:string) {
+    return this.groupService.create({...createGroupDto,createBy});
   }
 
   @Get()
-  findAll() {
-    return this.groupService.findAll();
+  findAll(@User('userId') userId:string) {
+    return this.groupService.findAll(userId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.groupService.findOne(+id);
+  @Get(':groupId')
+  findOne(@Param('groupId') groupId: string) {
+    return this.groupService.findOne(groupId);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGroupDto: UpdateGroupDto) {
-    return this.groupService.update(+id, updateGroupDto);
+  @Patch(':groupId')
+  update(@Param('groupId') groupId: string, @Body() updateGroupDto: UpdateGroupDto) {
+    return this.groupService.update(groupId, updateGroupDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.groupService.remove(+id);
+  @Delete(':groupId')
+  remove(@Param('groupId') groupId: string) {
+
+    return this.groupService.remove(groupId);
   }
 }

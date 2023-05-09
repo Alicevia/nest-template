@@ -35,7 +35,7 @@ export class UserService {
   }
 
   async findOneByUserId(userId:string) {
-    const user = this.findOne({userId})
+    const user = await this.findOne({userId})
     if(!user) BusinessException.throwException('无此用户')
     return user
   }

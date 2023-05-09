@@ -1,7 +1,10 @@
 
 
 export  const APP_CONF= () => ({
-  port: parseInt(process.env.PORT, 10) || 3000,
+  port: parseInt(process.env.PORT, 10) || 3001,
+  ws:{
+    port: parseInt(process.env.WS_PORT, 10) || 3002
+  },
   database: {
     host: process.env.DATABASE_HOST, // 这部分会和从env中进行合并
     port: process.env.DATABASE_PORT,

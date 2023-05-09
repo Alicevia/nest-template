@@ -9,7 +9,6 @@ export class NormalizeResponse<T>{
   message: string='操作成功'
   code: number = 0
   data?:T
-  timestamp: string
 
 
   url?: Request['url']
@@ -20,7 +19,6 @@ export class NormalizeResponse<T>{
   hostname?:Request['hostname']
   username?:UserDto['username']
   constructor(request?:Request){
-    this.timestamp=nowDate()
     this.body = request?.body
     this.query = request?.query
     this.ip = request?.ip
@@ -36,12 +34,12 @@ export class NormalizeResponse<T>{
 
     return data
   }
-  static fail(exception: HttpException,  request: Request) {
+  static fail(exception: HttpException,  request?: Request) {
     let data = new NormalizeResponse(request)
-    data.username = (request.user as any)?.username
+    data.username = (request?.user as any)?.username
     data.message = exception.message
     console.log(exception.getResponse(),'--',exception.cause)
-    data.data =exception.cause.message ?? exception.getResponse()
+    data.data =exception.cause?.message ?? exception.getResponse()
     data.code = exception.getStatus()
 
     return data
